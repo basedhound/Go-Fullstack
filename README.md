@@ -5,8 +5,6 @@ Votre application front-end doit s'exécuter dans un navigateur.
 
 Exécutez donc npm run start à partir du répertoire front-end, accédez à http://localhost:4200 avec votre navigateur.
 
-Pour lancer le server backend, utiliser "nodemon server" afin de faciliter l'actualisation du code.
-
 <br>
 
 ## Lancer le serveur :
@@ -22,4 +20,3 @@ Pour éviter cela, on installe "nodemon"  globalement (npm install -g nodemon)
 Maintenant, on utilise plus "node server" mais "nodemon server"  dans le terminal.
 
 
-# Go-Fullstack
