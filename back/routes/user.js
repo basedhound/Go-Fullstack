@@ -12,7 +12,7 @@ NB : N'oubliez pas que le segment de route indiqué ici est uniquement le segmen
 Le reste de l'adresse de la route sera déclaré dans notre application Express.
 */
 
-//! Main
+//!Base
 
 // Declare "Express" :
 const express = require('express');
@@ -23,11 +23,9 @@ const userRoutes = express.Router();
 // Declare Controller
 const userController = require('../controllers/user')
 
-
-
 //! Routes
-userRoutes.post('/signup', userController.signup)
-userRoutes.post('/login', userController.login)
+userRoutes.post('/api/auth/signup', userController.signup)
+userRoutes.post('/api/auth/login', userController.login)
 
 
 

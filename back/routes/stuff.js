@@ -46,8 +46,6 @@ Veillez à remplacer toutes les occurrences de "app" par "router" , car nous enr
 "api/stuff" doit être supprimé de chaque segment de route. 
 Si cela supprime une chaîne de route, veillez à laisser une barre oblique "/".
 
-Remplacer l'élément app.use() final par app.get() si ce n'est pas déjà fait, car cette route ne concerne que les demandes GET. */
-
 /* Implémentons le CRUD complet :
 1. create (création de ressources) ;
 2. read (lecture de ressources) ;
@@ -58,7 +56,7 @@ Remplacer l'élément app.use() final par app.get() si ce n'est pas déjà fait,
 /* Pour gérer la requête POST venant de l'application front-end, on a besoin d'en extraire le corps JSON. Pour cela, vous avez juste besoin d'un middleware très simple, mis à disposition par le framework Express. Juste après la déclaration de la constante  app  , ajoutez : app.use(express.json()); Avec ceci, Express prend toutes les requêtes qui ont comme Content-Type  application/json  et met à disposition leur  body  directement sur l'objet req, ce qui nous permet d'écrire le middleware POST suivant :*/
 
 //! Après dossier "controllers" = à présent on importe la logique métier (fonction =>)
-userRoutes.post('/', auth, multer, stuffController.createThing );
+userRoutes.post('/api/stuff', auth, multer, stuffController.createThing );
 
 //! Avant dossier "controllers"
 /* router.post('/', (req, res, next) => {
@@ -100,7 +98,7 @@ La méthode save() renvoie une Promise. Ainsi, dans notre bloc then() , nous ren
 
 //* GET Request => Créer une route qui permet de récuperer les objets à vendre
 //! Après dossier "controllers" = à présent on importe la logique métier (fonction =>)
-userRoutes.get('/', auth, stuffController.getAllThings );
+userRoutes.get('/api/stuff', auth, stuffController.getAllThings );
 
 //! Avant dossier "controllers"
 /* router.get('/', (req, res, next) => {
@@ -120,7 +118,7 @@ Si vous actualisez à présent l'application front-end, vous devriez voir vos ar
 
 //* GET Request => Créer une route qui permet de récuperer un objet spécifique
 //! Après dossier "controllers" = à présent on importe la logique métier (fonction =>)
-userRoutes.get('/:id', auth, stuffController.getOneThing );
+userRoutes.get('/api/stuff/:id', auth, stuffController.getOneThing );
 
 //! Avant dossier "controllers"
 /* router.get('/:id', (req, res, next) => {
@@ -148,7 +146,7 @@ La méthode  app.get()  permet de réagir uniquement aux requêtes de type GET. 
 
 //* PUT Request => Modifier un élément existant
 //! Après dossier "controllers" = à présent on importe la logique métier (fonction =>)
-userRoutes.put('/:id', auth, multer, stuffController.modifyThing );
+userRoutes.put('/api/stuff/:id', auth, multer, stuffController.modifyThing );
 
 //! Avant dossier "controllers"
 /* router.put('/:id', (req, res, next) => {
@@ -165,7 +163,7 @@ Vous pouvez maintenant tester votre nouvelle route : cliquez sur un Thing de l'a
 
 //* DELETE Request => Supprimer un Thing existant
 //! Après dossier "controllers" = à présent on importe la logique métier (fonction =>)
-userRoutes.delete('/:id', auth, stuffController.deleteThing );
+userRoutes.delete('/api/stuff/:id', auth, stuffController.deleteThing );
 
 //! Avant dossier "controllers"
 /* router.delete('/:id', (req, res, next) => {

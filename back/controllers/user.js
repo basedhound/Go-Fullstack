@@ -40,7 +40,7 @@ const jwt = require('jsonwebtoken');
 
 //* SIGNUP => Créer un nouveau utilisateur
 exports.signup = (req, res, next) => {
-    // Appel de "bcrypt.hash", fonction qui crypte passwor => sur body.password (mdp user) => 10 fois (tours de cryptages)
+    // Appel de "bcrypt.hash", fonction qui crypte password => sur body.password (mdp user) => 10 fois (tours de cryptages)
     bcrypt.hash(req.body.password, 10)
         // Ensuite, mot de passe dans nouvel utilisateur
         .then(hashedPassword => {
@@ -85,7 +85,7 @@ exports.login = (req, res, next) => {
                         // Si password est faux => erreur d'authentification
                         if (!valid) {
                             res.status(401).json({ message: 'Paire identifiant/mot de passe incorrecte' })
-                            // Si password est correct => Envoi d'bjet nécessaire à l'authentificaion
+                            // Si password est correct => Envoi d'objet nécessaire à l'authentificaion
                         } else {
                             // Réponse : Renvoyer le token au front-end
                             res.status(200).json({

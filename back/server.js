@@ -5,8 +5,8 @@
 //*===================================================
 
 //* Créer une application Express 
-// Installer Express et l'enregistrer dans le package.json : 'npm install express --save' (dossier backend)
-// On crée un fichier 'app.js' qui contiendra notre application
+// Installer Express 'npm install express' (dossier backend)
+// Créer un fichier 'app.js' qui contiendra notre application
 //* Importer EXPRESS
 const app = require('./app')
 
@@ -37,7 +37,7 @@ const errorHandler = error => {
         throw error;
     }
     const address = server.address();
-    const bind = typeof address === 'string' ? 'pipe ' + address : 'port: ' + port;
+    const bind = typeof address === 'string' ? 'pipe ' + address : 'port: ' + normalizedPort;
     switch (error.code) {
         case 'EACCES':
             console.error(bind + ' requires elevated privileges.');

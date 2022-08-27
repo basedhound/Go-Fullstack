@@ -1,5 +1,7 @@
+//! Version Finale : Les routes actuelles fonctionnent avec la "Partie 4" de l'application http://localhost:4200/
+
 //*============================================
-//*================= MAIN =====================
+//*================= APP ======================
 //*============================================
 
 //* DOTENV
@@ -73,12 +75,12 @@ Pour cela, vous avez juste besoin d'un middleware très simple, mis à dispositi
 app.use(express.json())
 
 //* Call STUFF Router => stuff.js (CRUD objets)
-app.use('/api/stuff', stuffRoutes);
+app.use(stuffRoutes);
 // = Pour cette route là, on utiliser le router déclaré par "stuffRoutes"
 
 //* Call USER Router : user.js (Authentification)
-app.use('/api/auth', userRoutes);
-// = Pour cette route là, on utiliser le router déclaré par "stuffRoutes"
+app.use(userRoutes);
+// = Pour cette route là, on utiliser le router déclaré par "userRoutes"
 
 //* Call IMAGES : stuff.js (gestion images pour requête POST)
 app.use('/images', express.static(path.join(__dirname, 'images')))
