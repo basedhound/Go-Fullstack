@@ -1,93 +1,54 @@
 //! Version Finale : Les routes actuelles fonctionnent avec la "Partie 4" de l'application http://localhost:4200/
+//============================================
+//=============== APPLICATION ================
+//============================================
 
-//*============================================
-//*================= APP ======================
-//*============================================
+//* Imports - Librairie :
+require("dotenv").config(); // Dotenv (Sécurité)
+const express = require('express'); // Express
+const helmet = require('helmet'); // Helmet (Sécurité)
+const path = require('path') // Accès path serveur (route /images pour Multer)
+const cors = require("cors"); // Headers HTTP
 
-//* DOTENV
-// 1. Install "Dotenv" = npm install dotenv
-// 2. Declare "Dotenv" ;
-require("dotenv").config();
-// You can now use "process.env" (.env file)
+//* Imports - Code :
+require('./services/database'); // Database (connexion)
+const userRouter = require('./routes/user') // Routes User
+const stuffRouter = require('./routes/stuff') // Routes Stuff
 
-//* CORS
-// Install "CORS" = npm install cors
-// Declare "CORS" :
-const cors = require("cors");
+//* Express : 
+const app = express(); // Application Express
 
-//! Créer une application Express (suite)
-//* EXPRESS
-// 1. Install "Express" = npm install express 
-// 2. Look for "Express" in package.json
-// 3. Declare "Express" :
-const express = require('express');
-// 4. Test "Express" with console.log
-// 5. Declare "app" :
-const app = express();
 
-//* IMPORTS
-// On importe notre "router.js"
-const stuffRoutes = require('./routes/stuff')
-// On l'appelle ensuite dans les middlewares
+//* Middleware : 
+// Helmet : Protège l'application de certaines vulnérabilités en configurant de manière appropriée des headers HTTP
+app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 
-// On importe notre "routes/user.js"
-const userRoutes = require('./routes/user')
-// On l'appelle ensuite dans les middlewares
-
-// Accéder au "path" de notre serveur (pour gestion des images uploadées)
-const path = require('path')
-// + (plus bas, dans middleware) Ajout routage : app.use('/images', express.static(path.join(__dirname, 'images')));
-
-//*===============================================
-//*================= MIDDLEWARE ==================
-//*===============================================
-/* Un middleware est un bloc de code qui traite les requêtes et réponses de votre application.
-Une application Express est fondamentalement une série de fonctions appelées middleware.
-'next' permet de renvoyer à une fonction l'exécution du serveur. */
-
-//* COMMENT CORRIGER UNE ERREUR " CORS " ?
-/* CORS signifie « **Cross Origin Resource Sharing** ». Il s'agit d'un système de sécurité qui, par défaut, bloque les appels HTTP entre des serveurs différents, ce qui empêche donc les requêtes malveillantes d'accéder à des ressources sensibles. Dans notre cas, nous avons deux origines : `localhost:3000` et `localhost:4200` , et nous souhaiterions qu'elles puissent communiquer entre elles. Pour cela, nous devons ajouter des headers à notre objet  `response` . */
-
-//TODO : On peut simplement utiliser le package npm " CORS " :
-// 1. Install "CORS" = npm install cors | Déjà fait plus haut dans ce fichier
-// 2. Declare "CORS" : const cors = require("cors"); | Déjà fait plus haut dans ce fichier
-// 3. Call "CORS" : 
+//? Configurer les CORS (Headers HTTP)
+// On peut simplement utiliser le package npm " CORS " :
 app.use(cors());
-
-//TODO : Sinon, on peut le faire manuellement :
+// Ou sinon, on peut le faire manuellement :
 /* app.use((req, res, next) => {
+    // Accéder à notre API depuis n'importe quelle origine
     res.setHeader('Access-Control-Allow-Origin', '*');
+    // Ajouter les headers mentionnés aux requêtes envoyées vers notre API
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    // Envoyer des requêtes avec les méthodes mentionnées
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 }); */
-/* Rôle de ces headers :
-1 - Accéder à notre API depuis n'importe quelle origine ( '*' ) ;
-2 - Ajouter les headers mentionnés aux requêtes envoyées vers notre API (Origin , X-Requested-With , etc.) ;
-3 - Envoyer des requêtes avec les méthodes mentionnées ( GET ,POST , etc.). 
-Comme vous pouvez le voir dans le code, le middleware ne prend pas d'adresse en premier paramètre, afin de s'appliquer à toutes les routes. 
-Cela permettra à toutes les demandes de toutes les origines d'accéder à votre API. 
-*/
 
-//* Call PARSER => .use(express.json())
-/* Pour gérer la requête POST venant de l'application front-end, on a besoin d'en extraire le corps JSON. 
-Pour cela, vous avez juste besoin d'un middleware très simple, mis à disposition par le framework Express. Juste après la déclaration de la constante  app  , ajoutez : */
+// Parser : Analyse le corps d'une requête HTTP, assemble les données, crée un objet body exploitable
 app.use(express.json())
 
-//* Call STUFF Router => stuff.js (CRUD objets)
-app.use(stuffRoutes);
-// = Pour cette route là, on utiliser le router déclaré par "stuffRoutes"
-
-//* Call USER Router : user.js (Authentification)
-app.use(userRoutes);
-// = Pour cette route là, on utiliser le router déclaré par "userRoutes"
-
-//* Call IMAGES : stuff.js (gestion images pour requête POST)
+// Servir des fichiers statiques (images...)
 app.use('/images', express.static(path.join(__dirname, 'images')))
-// express.static()  et  path.join() : Configurez votre serveur pour renvoyer des fichiers statiques pour une route donnée
 
-//! EXPORT
-// On exporte cette application pour y accéder depuis les autres fichiers de notre projet (notre serveur node).
+app.use(userRouter); // Routeur User
+
+app.use(stuffRouter); // Routeur Stuff
+
+
+//* Exports : 
 module.exports = app;
 
 

@@ -4,6 +4,9 @@
 # GIT FOLDER
 .git/
 
+# IMAGES
+images/
+
 # LOG FILES
 *.log
 

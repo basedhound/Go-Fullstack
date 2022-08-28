@@ -1,183 +1,29 @@
-//*==============================================
-//*================= ROUTER =====================
-//*==============================================
-//*============ PRODUCTS TO SELL ================
-//*==============================================
+//===============================================
+//================= STUFF ROUTER ================
+//===============================================
 
-/* La première chose que nous allons faire est de dissocier notre logique de routing et la logique globale de l'application. Créez, dans votre dossier backend , un dossier routes puis, dans ce nouveau dossier, un fichier stuff.js . Celui-ci contiendra la logique de nos routes stuff :  */
-
-//* On appelle Express
-const express = require('express');
-
-//* On crée un "Router"
-const userRoutes = express.Router();
-
-/* Ci-dessus, nous créons un routeur Express. Jusqu'à présent, nous avions enregistré nos routes directement dans notre application. 
-Maintenant, nous allons les enregistrer dans notre routeur Express, puis enregistrer celui-ci dans l'application. 
-
-La méthodeexpress.Router()  vous permet de créer des routeurs séparés pour chaque route principale de votre application 
-– vous y enregistrez ensuite les routes individuelles.*/
-
-//* AUTHENTIFICATION : On importe la fonction d'authentification depuis le fichier "../middleware/auth"
-const auth = require('../middleware/auth');
-// On ajoute "auth" dans nos routes, toujours anvec les "controllers"
-
-//* MULTER : On importe notre méthode multer depuis le fichier "../middleware/multer-config" 
-const multer = require('../middleware/multer-config')
+//* Imports
+const express = require('express'); // Express
+const auth = require('../middleware/auth') // Authentification (sécurité)
+// On ajoute "auth" dans nos routes, toujours anvant les controllers
+const multer = require('../middleware/multer-config') // Multer (images)
 // On ajoute "multer" dans nos routes "POST" et "PUT" (cells qui en ont besoin), entre "auth" et "controller"
-// On va devoir modifier notre fonction "createThing" (../controllers/stuff.js) pour prendre en compte "multer"
+const stuffController = require('../controllers/stuff') // Sauce contrôleur
+// On importe les fonctions/logiques métiers depuis le fichier "../controllers/stuff"
 
+//* Routeur
+const stuffRouter = express.Router(); // Déclarer routeur Stuff
 
-//* THING MODEL : On importe notre modèle "Thing" (tant que les fonctions/logiques métiers sont dans ce fichier)
-// const Thing = require('../models/Thing');
+// POST => Publier un objet (/api/stuff)
+stuffRouter.post('/api/stuff', auth, multer, stuffController.createThing);
+// GET => Afficher toutes les objets (/api/stuff)
+stuffRouter.get('/api/stuff', auth, stuffController.getAllThings);
+// GET => Afficher un objet en particulier (/api/stuff/:id)
+stuffRouter.get('/api/stuff/:id', auth, stuffController.getOneThing);
+// PUT => Modifier un objet (/api/stuff/:id)
+stuffRouter.put('/api/stuff/:id', auth, multer, stuffController.modifyThing);
+// DELETE => Supprimer un objet (/api/stuff/:id)
+stuffRouter.delete('/api/stuff/:id', auth, stuffController.deleteThing);
 
-//* CONTROLLER : On importe les fonctions/logiques métiers depuis le fichier "../controllers/stuff"
-const stuffController = require('../controllers/stuff')
-
-
-
-//*=====================================================
-//*=================== ROUTES CRUD =====================
-//*=====================================================
-
-/* Il est temps de couper toutes nos routes de app.js et de les coller dans notre routeur. 
-Veillez à remplacer toutes les occurrences de "app" par "router" , car nous enregistrons les routes dans notre routeur.
-
-"api/stuff" doit être supprimé de chaque segment de route. 
-Si cela supprime une chaîne de route, veillez à laisser une barre oblique "/".
-
-/* Implémentons le CRUD complet :
-1. create (création de ressources) ;
-2. read (lecture de ressources) ;
-3. update (modification de ressources) ;
-4. delete (suppression de ressources). */
-
-//* POST Request => Créer une route permettant aux utilisateurs de poster leurs articles à vendre
-/* Pour gérer la requête POST venant de l'application front-end, on a besoin d'en extraire le corps JSON. Pour cela, vous avez juste besoin d'un middleware très simple, mis à disposition par le framework Express. Juste après la déclaration de la constante  app  , ajoutez : app.use(express.json()); Avec ceci, Express prend toutes les requêtes qui ont comme Content-Type  application/json  et met à disposition leur  body  directement sur l'objet req, ce qui nous permet d'écrire le middleware POST suivant :*/
-
-//! Après dossier "controllers" = à présent on importe la logique métier (fonction =>)
-userRoutes.post('/api/stuff', auth, multer, stuffController.createThing );
-
-//! Avant dossier "controllers"
-/* router.post('/', (req, res, next) => {
-    delete req.body._id;
-    const thing = new Thing({
-        ...req.body
-    });
-    thing.save()
-        .then(() => res.status(201).json({ message: 'Post saved successfully!' }))
-        .catch(error => res.status(400).json({ error }));
-}); */
-
-/* ...req.body =
-    title: req.body.title,
-    description: req.body.description,
-    imageUrl: req.body.imageUrl,
-    price: req.body.price,
-    userId: req.body.userId
-*/
-
-// Tant qu'il n'y a pas de base de donnée, simplement logger à la console (contenu corps requête):
-// Si on écrit pas de réponse (res), la requête va planter côté utilisateur.
-// Dans une app Express, le dernier middleware pour une route donnée doit renvoyer la réponse au client pour empêcher les requêtes d'expirer.
-// Code 201 = création de ressource
-/* Veillez à :
-- soit modifier la méthode  use  en  get  pour le middleware des requêtes GET ;
-- soit placer la route POST au-dessus du middleware pour les requêtes GET, car la logique GET interceptera actuellement toutes les requêtes envoyées à votre endpoint /api/stuff , étant donné qu'on ne lui a pas indiqué de verbe spécifique. Placer la route POST au-dessus interceptera les requêtes POST, en les empêchant d'atteindre le middleware GET.
-
-Ici, vous créez une instance de votre modèle Thing en lui passant un objet JavaScript contenant toutes les informations requises du corps de requête analysé (en ayant supprimé en amont le faux_id envoyé par le front-end).
-
-L'opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body
-
-Ce modèle comporte une méthode save() qui enregistre simplement votre Thing dans la base de données.
-
-La base de données MongoDB est fractionnée en collections : le nom de la collection est défini par défaut sur le pluriel du nom du modèle. Ici, ce sera Things  .
-
-La méthode save() renvoie une Promise. Ainsi, dans notre bloc then() , nous renverrons une réponse de réussite avec un code 201 de réussite. Dans notre bloc catch() , nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400. */
-
-
-//* GET Request => Créer une route qui permet de récuperer les objets à vendre
-//! Après dossier "controllers" = à présent on importe la logique métier (fonction =>)
-userRoutes.get('/api/stuff', auth, stuffController.getAllThings );
-
-//! Avant dossier "controllers"
-/* router.get('/', (req, res, next) => {
-    Thing.find()
-        .then(things => res.status(200).json(things))
-        .catch(error => res.status(400).json({ error }));
-});
- */
-/* L'argument supplémentaire passé à la méthode use : nous lui passons un string, correspondant à la route pour laquelle nous souhaitons enregistrer cet élément de middleware. Dans ce cas, cette route serahttp://localhost:3000/api/stuff , car il s'agit de l'URL demandée par l'application front-end.
-
-Dans ce middleware, nous créons un groupe d'articles avec le schéma de données spécifique requis par le front-end. Nous envoyons ensuite ces articles sous la forme de données JSON, avec un code 200 pour une demande réussie.
-
-Si vous effectuez une demande GET vers cette route (aussi appelée endpoint) à partir de Postman, vous verrez que vous recevrez le groupe de stuff
-
-Vous pouvez également ajouter des URL d'images valides aux stuff renvoyés par l'API, en terminant la route GET. 
-Si vous actualisez à présent l'application front-end, vous devriez voir vos articles en vente.*/
-
-//* GET Request => Créer une route qui permet de récuperer un objet spécifique
-//! Après dossier "controllers" = à présent on importe la logique métier (fonction =>)
-userRoutes.get('/api/stuff/:id', auth, stuffController.getOneThing );
-
-//! Avant dossier "controllers"
-/* router.get('/:id', (req, res, next) => {
-    Thing.findOne({ _id: req.params.id })
-        .then(thing => res.status(200).json(thing))
-        .catch(error => res.status(404).json({ error }));
-}); */
-
-/* Dans cette route :
-1. nous utilisons la méthode get() pour répondre uniquement aux demandes GET à cet endpoint ;
-2. nous utilisons deux-points : en face du segment dynamique de la route pour la rendre accessible en tant que paramètre ;
-3. nous utilisons ensuite la méthode findOne() dans notre modèle Thing pour trouver le Thing unique ayant le même _id que le paramètre de la requête ; ce Thing est ensuite retourné dans une Promise et envoyé au front-end ;
-
-Si aucun Thing n'est trouvé ou si une erreur se produit, nous envoyons une erreur 404 au front-end, avec l'erreur générée.
-
-Maintenant, notre application commence vraiment à prendre forme ! Nous pouvons créer des objets et les voir apparaître immédiatement dans notre boutique en ligne grâce à la base de données. Et nous pouvons même ouvrir un objet en particulier pour obtenir les informations de cet objet précis, via la base de données.
-
-EN RÉSUMÉ :
-Les méthodes de votre modèle Thing permettent d'interagir avec la base de données :
-save()  – enregistre un Thing ;
-find()  – retourne tous les Things ;
-findOne()  – retourne un seul Thing basé sur la fonction de comparaison qu'on lui passe 
-(souvent pour récupérer un Thing par son identifiant unique).
-La méthode  app.get()  permet de réagir uniquement aux requêtes de type GET. */
-
-//* PUT Request => Modifier un élément existant
-//! Après dossier "controllers" = à présent on importe la logique métier (fonction =>)
-userRoutes.put('/api/stuff/:id', auth, multer, stuffController.modifyThing );
-
-//! Avant dossier "controllers"
-/* router.put('/:id', (req, res, next) => {
-    Thing.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Thing updated successfully!' }))
-        .catch(error => res.status(400).json({ error }));
-}); */
-
-/* Ci-dessus, nous exploitons la méthode updateOne() dans notre modèle Thing . Cela nous permet de mettre à jour le Thing qui correspond à l'objet que nous passons comme premier argument. Nous utilisons aussi le paramètre id passé dans la demande, et le remplaçons par le Thing passé comme second argument.
-
-L'utilisation du mot-clé new avec un modèle Mongoose crée par défaut un champ_id . Utiliser ce mot-clé générerait une erreur, car nous tenterions de modifier un champ immuable dans un document de la base de données. Par conséquent, nous devons utiliser le paramètre id de la requête pour configurer notre Thing avec le même _id qu'avant.
-
-Vous pouvez maintenant tester votre nouvelle route : cliquez sur un Thing de l'application, puis sur son bouton Modifier, changez ses paramètres puis sauvegardez. Vous envoyez alors un Thing modifié au back-end. En revenant sur la page des articles, vous devriez retrouver votre article modifié. */
-
-//* DELETE Request => Supprimer un Thing existant
-//! Après dossier "controllers" = à présent on importe la logique métier (fonction =>)
-userRoutes.delete('/api/stuff/:id', auth, stuffController.deleteThing );
-
-//! Avant dossier "controllers"
-/* router.delete('/:id', (req, res, next) => {
-    Thing.deleteOne({ _id: req.params.id })
-        .then(() => res.status(200).json({ message: ' Deleted !' }))
-        .catch(error => res.status(400).json({ error }));
-}); */
-
-/*   La méthode deleteOne() de notre modèle fonctionne comme findOne() et updateOne() dans le sens où nous lui passons un objet correspondant au document à supprimer. Nous envoyons ensuite une réponse de réussite ou d'échec au front-end.  
-
-EN RÉSUMÉ :
-app.put()  et  app.delete()  attribuent des middlewares aux requêtes de type PUT et de type DELETE.
-Les méthodes  updateOne()  et  delete()  de votre modèle Thing permettent de mettre à jour ou de supprimer un Thing dans la base de données. 
-*/
-
-//* On exporte notre "router"
-module.exports = userRoutes;
+//* Exports
+module.exports = stuffRouter;
