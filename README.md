@@ -15,9 +15,9 @@
 
 ## <br /> <a name="introduction">✨ Introduction</a>
 
-**[FR]** 
+**[EN]** This project is a full-stack application using Node.js, Express, and MongoDB to build a dynamic online store. It features a REST API for managing products with CRUD operations, an authentication system for security, and user file management for image uploads. The API is designed to be fully functional and persistent, showcasing your ability to create a web server, implement authentication, and handle user files effectively.
 
-**[EN]** 
+**[FR]** Ce projet est une application full-stack utilisant Node.js, Express et MongoDB pour construire un magasin en ligne dynamique. Il comprend une API REST pour gérer les produits avec des opérations CRUD, un système d'authentification pour la sécurité, et une gestion des fichiers utilisateur pour les téléchargements d'images. L'API est conçue pour être entièrement fonctionnelle et persistante, démontrant votre capacité à créer un serveur web, mettre en place l'authentification et gérer les fichiers utilisateur de manière efficace.
 
 
 ## <br /> <a name="tech-stack">⚙️ Tech Stack</a>
@@ -79,12 +79,14 @@ Make sure you have the following installed on your machine:
 - [Node.js](https://nodejs.org/en)
 - [npm](https://www.npmjs.com/) (Node Package Manager)
 
-To install nodemon globally on your machine, open your terminal and run the following command:
+Install nodemon globally on your machine, open your terminal and run the following command:
 ```bash
 npm install -g nodemon
 ```
 
-- **Nodemon** is a tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected. nodemon does not require any additional changes to your code or method of development. nodemon is a replacement wrapper for node .
+- **Nodemon** is a tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected.
+
+
 
 <br/>**Cloning the Repository**
 
@@ -165,70 +167,3 @@ yarn start
 - Client running on [`http://localhost:4200`](http://localhost:4200)
 - Server running on [`http://localhost:3000`](http://localhost:3000)
 
-Choose the port your API is running on, and click `TEST-ROUTES` to test your API. <br> <br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Go Full Stack avec Node.js, Express et MongoDB
-
-À partir de Node et d'Express, créez diverses routes pour les différentes fonctions à mettre à la disposition de votre API. Ensuite, vous ajouteez MongoDB, une base de données NoSQL, pour rendre votre API entièrement dynamique et vos données pleinement persistantes.
-
-
-
-# Lancement
-## Site : 
-Votre application front-end doit s'exécuter dans un navigateur. 
-
-Exécutez donc npm run start à partir du répertoire front-end, accédez à http://localhost:4200 avec votre navigateur.
-
-## Serveur :
-On peut lancer le serveur via le terminal : "node server"
-
-Tester http://localhost:3000 via navigateur ou POSTMAN
-
-Par défaut, si on lance le serveur ("node server"), puis qu'on apporte une modification, il faut relancer le serveur pour mise à jour.
-
-Pour éviter cela, on installe "nodemon"  globalement (npm install -g nodemon). Lancer le serveur via "nodemon server".
-
-# Compétences évaluées
-- Créer un serveur web simple avec Express 
-- Créer une API REST avec Node, Express et MongoDB 
-- Mettre en place un système d'authentification sur une application Express 
-- Gérer des fichiers utilisateur sur une application Express
-
-# Technologies
-- Node.js
-- Express
-- Mongoose (MongoDB)
-- NPM : Bcrypt, Crypto-js, Dotenv, Express, Helmet, Jsonwebtoken, Mongoose-unique-validator, Multer, Password-validator, Validator
-
-# Contexte
-L'application est un magasin en ligne simple. Une API permet de Créer, Lire, Mettre à jour et Supprimer des éléments en vente (CRUD). L'API dispose d'un système d'authentification afin de la protéger. Une gestion des fichiers utilisateurs est intégrée afin de permettre aux clients de télécharger leurs propres images lors de la publication des annnonces.
