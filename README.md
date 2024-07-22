@@ -15,9 +15,10 @@
 
 ## <br /> <a name="introduction">✨ Introduction</a>
 
-**[EN]** This project is a full-stack application using Node.js, Express, and MongoDB to build a dynamic online store. It features a REST API for managing products with CRUD operations, an authentication system for security, and user file management for image uploads. The API is designed to be fully functional and persistent, showcasing your ability to create a web server, implement authentication, and handle user files effectively.
+**[EN]** This project focuses on building a RESTful API using Node.js and Express for a school assignment at OpenClassrooms. The API features robust authentication, database integration with MongoDB, and full CRUD operations. Security tools include Bcrypt, Crypto-js, Helmet, Jsonwebtoken, along with Mongoose, Dotenv, Multer, and Mongoose-unique-validator.
 
-**[FR]** Ce projet est une application full-stack utilisant Node.js, Express et MongoDB pour construire un magasin en ligne dynamique. Il comprend une API REST pour gérer les produits avec des opérations CRUD, un système d'authentification pour la sécurité, et une gestion des fichiers utilisateur pour les téléchargements d'images. L'API est conçue pour être entièrement fonctionnelle et persistante, démontrant votre capacité à créer un serveur web, mettre en place l'authentification et gérer les fichiers utilisateur de manière efficace.
+**[FR]** Ce projet se concentre sur la création d'une API RESTful utilisant Node.js et Express pour un devoir scolaire chez OpenClassrooms. L'API comprend une authentification robuste, une intégration avec une base de données MongoDB, et des opérations CRUD complètes. Les outils de sécurité incluent Bcrypt, Crypto-js, Helmet, Jsonwebtoken, ainsi que Mongoose, Dotenv, Multer, et Mongoose-unique-validator.
+
 
 
 ## <br /> <a name="tech-stack">⚙️ Tech Stack</a>
