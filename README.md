@@ -80,7 +80,9 @@ Make sure you have the following installed on your machine:
 - [npm](https://www.npmjs.com/) (Node Package Manager)
 
 To install nodemon globally on your machine, open your terminal and run the following command:
-`npm install -g nodemon`
+```bash
+npm install -g nodemon
+```
 
 - **Nodemon** is a tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected. nodemon does not require any additional changes to your code or method of development. nodemon is a replacement wrapper for node .
 
